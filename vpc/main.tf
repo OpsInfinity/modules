@@ -1,6 +1,7 @@
 module "dev-vpc" {
     #source = "../terraform-aws-vpc"
-    source = "git::https://github.com/OpsInfinity/vpc.git?ref=main"
+    # source = "git::https://github.com/OpsInfinity/vpc.git?ref=main"
+    source = "git::https://github.com/OpsInfinity/aws.git//vpc?ref=main" 
     env                     = "dev"
     project-name            = "expense"
     vpc_cidr                = "10.0.0.0/16"
@@ -11,4 +12,24 @@ module "dev-vpc" {
     account_no              = data.aws_caller_identity.current.account_id
     default_vpc_id          = data.aws_vpc.default.id
     default_route_table_id  = data.aws_route_table.main.id
+}
+
+# Output for public subnet IDs
+output "public_subnet_ids" {
+  value = module.dev-vpc.public_subnet_ids # Ensure correct output from module
+}
+
+# Output for private subnet IDs
+output "private_subnet_ids" {
+  value = module.dev-vpc.private_subnet_ids # Ensure correct output from module
+}
+
+# Output for database subnet IDs
+output "database_subnet_ids" {
+  value = module.dev-vpc.database_subnet_ids # Ensure correct output from module
+}
+
+# Output for VPC ID
+output "vpc_id" {
+  value = module.dev-vpc.vpc_id # Ensure correct output from module
 }

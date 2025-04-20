@@ -20,3 +20,9 @@ output "main_route_table_id" {
 output "name" {
   value = slice(data.aws_availability_zones.available.names, 0, 2)
 }
+
+
+
+output "vpc_id_from_module" {
+  value = module.dev-vpc.vpc_id
+}
