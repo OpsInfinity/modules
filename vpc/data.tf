@@ -26,3 +26,9 @@ output "name" {
 output "vpc_id_from_module" {
   value = module.dev-vpc.vpc_id
 }
+
+
+
+# output "default_vpc_cidr" {
+#   value = data.aws_vpc.default.cidr_block
+# }

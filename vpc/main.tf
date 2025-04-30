@@ -2,6 +2,7 @@ module "dev-vpc" {
     #source = "../terraform-aws-vpc"
     # source = "git::https://github.com/OpsInfinity/vpc.git?ref=main"
     source = "git::https://github.com/OpsInfinity/aws.git//vpc?ref=main" 
+    # for_each                = var.vpc
     env                     = "dev"
     project-name            = "expense"
     vpc_cidr                = "10.0.0.0/16"
@@ -12,24 +13,19 @@ module "dev-vpc" {
     account_no              = data.aws_caller_identity.current.account_id
     default_vpc_id          = data.aws_vpc.default.id
     default_route_table_id  = data.aws_route_table.main.id
+    default_vpc_cidr        = data.aws_vpc.default.cidr_block
 }
-
-# Output for public subnet IDs
-output "public_subnet_ids" {
-  value = module.dev-vpc.public_subnet_ids # Ensure correct output from module
-}
-
-# Output for private subnet IDs
-output "private_subnet_ids" {
-  value = module.dev-vpc.private_subnet_ids # Ensure correct output from module
-}
-
-# Output for database subnet IDs
-output "database_subnet_ids" {
-  value = module.dev-vpc.database_subnet_ids # Ensure correct output from module
-}
-
-# Output for VPC ID
-output "vpc_id" {
-  value = module.dev-vpc.vpc_id # Ensure correct output from module
+module "prod-vpc" {
+  source                 = "git::https://github.com/OpsInfinity/aws.git//vpc?ref=main"
+  env                    = "prod"
+  project-name           = "expense"
+  vpc_cidr               = "10.0.0.0/16"
+  azs                    = slice(data.aws_availability_zones.available.names, 0, 2)
+  public_subnet_cidrs    = ["10.0.1.0/24", "10.0.2.0/24"]
+  private_subnet_cidrs   = ["10.0.11.0/24", "10.0.12.0/24"]
+  database_subnet_cidrs  = ["10.0.21.0/24", "10.0.22.0/24"]
+  account_no             = data.aws_caller_identity.current.account_id
+  default_vpc_id         = data.aws_vpc.default.id
+  default_route_table_id = data.aws_route_table.main.id
+  default_vpc_cidr       = data.aws_vpc.default.cidr_block
 }
