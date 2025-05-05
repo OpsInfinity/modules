@@ -30,10 +30,10 @@ resource "aws_security_group_rule" "bastion_public" {
 
 # Security group rule to allow all traffic between dev and prod security groups
 resource "aws_security_group_rule" "cluster_node" {
-     type                      = "ingress"
-     from_port                 = 0
-     to_port                   = 65535
-     protocol                  = "-1"  # Allowing all traffic (TCP, UDP, ICMP, etc.)
-     source_security_group_id  = module.sg.sg_id  # Using the output value from the dev security group
-     security_group_id         = module.sg-eks.sg_id # Using the output value from the prod security group
+     type                      = "ingress"                  # This rule is for incoming traffic
+     from_port                 = 0                            # Start port range (0 means any)
+     to_port                   = 65535                        # End port range (65535 means any)
+     protocol                  = "-1"                          # Allowing all traffic (TCP, UDP, ICMP, etc.)
+     source_security_group_id  = module.sg.sg_id              # Incoming traffic is allowed from the dev security group (source)
+     security_group_id         = module.sg-eks.sg_id          # Traffic is directed to the prod security group (destination)
 }
